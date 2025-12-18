@@ -3,6 +3,9 @@
 
 name: Build and deploy Node.js app to Azure Web App - tech0-gen-11-step3-2-node-46
 
+
+# 実行タイミング
+# main ブランチに push されたら自動実行
 on:
   push:
     branches:
@@ -11,17 +14,45 @@ on:
 
 jobs:
   build:
+    # ubuntu仮想マシンで実行
     runs-on: ubuntu-latest
     permissions:
       contents: read #This is required for actions/checkout
 
     steps:
+      # GitHubリポジトリのコードを取得
       - uses: actions/checkout@v4
 
+      # Node.js のセットアップ(Local環境の Node.js バージョンに合わせる)
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
+
+      # 追加コード1
+      # バックエンドのURLを読み込み、npmコマンドを実行
+      - name: Npm install, build and test
+        env:
+          NEXT_PUBLIC_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+
+      # 追加コード2
+      # Next.js の 本番実行に必要なファイルだけを集め、deploy フォルダにコピー
+      # 注) ここで生成した deploy/server.jsを、スタートアップコマンドへ入力する
+      - name: Copy artifact for deployment job
+        run: |
+          mkdir deploy
+          cp -r ./.next/standalone/. ./deploy
+          cp -r ./.next/static/. ./deploy/.next/static
+
+      # 追加コード3
+      # Zipにまとめる
+      - name: Zip artifact for deployment
+        run: zip release.zip ./deploy -r
+
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -44,7 +75,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'tech0-gen-11-step3-2-node-46'
-          slot-name: 'production'
-          package: release.zip #4
-          #変更箇所
+          slot-name: 'Production'
+          package: release.zip
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_297900262A6B4E36AAB97E6F32B7B815 }}
