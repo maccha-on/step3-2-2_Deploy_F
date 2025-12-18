@@ -1,10 +1,16 @@
+// export default function OneCustomerInfoCard({
+//   customer_id,
+//   customer_name,
+//   age,
+//   gender,
+// }) {
 export default function OneCustomerInfoCard({
-  customer_id,
-  customer_name,
-  age,
-  gender,
+  customer_id = "",
+  customer_name = "",
+  age = "",
+  gender ="",
 }) {
-  return (
+return (
     <>
       <div className="m-4 card bordered bg-blue-200 duration-200 hover:border-r-red">
         <div className="card-body">
