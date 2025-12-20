@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     # 消さなくて良い？
-    permissions:
-      contents: read #This is required for actions/checkout
+    # permissions:
+    #  contents: read #This is required for actions/checkout
 
     steps:
       # GitHubリポジトリのコードを取得
@@ -34,6 +34,8 @@ jobs:
       # 追加コード1
       # バックエンドのURLを読み込み、npmコマンドを実行
       - name: npm install, build and test
+        working-directory:
+          ./frontend
         env:
           NEXT_PUBLIC_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
         run: |
