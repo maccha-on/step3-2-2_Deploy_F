@@ -4,10 +4,16 @@ import fetchCustomer from "./fetchCustomer";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 
-// エラー回避のため追加 2025.12.20 13:55
-export const dynamic = "force-dynamic";
-
 export default function ConfirmPage() {
+  return (
+    <Suspense fallback={<div className="m-4">Loading...</div>}>
+      <ConfirmPageInner />
+    </Suspense>
+  );
+}
+
+function ConfirmPageInner() {
+
   const router = useRouter();
   const customer_id = useSearchParams().get("customer_id");
   const [customer, setCustomer] = useState(null);
