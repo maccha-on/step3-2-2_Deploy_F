@@ -2,7 +2,10 @@
 import OneCustomerInfoCard from "@/app/components/one_customer_info_card.jsx";
 import fetchCustomer from "./fetchCustomer";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+
+// エラー回避のため追加 2025.12.20 13:55
+export const dynamic = "force-dynamic";
 
 export default function ConfirmPage() {
   const router = useRouter();
