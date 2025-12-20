@@ -34,8 +34,6 @@ jobs:
       # 追加コード1
       # バックエンドのURLを読み込み、npmコマンドを実行
       - name: npm install, build and test
-        working-directory:
-          ./frontend
         env:
           NEXT_PUBLIC_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
         run: |
