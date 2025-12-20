@@ -16,6 +16,8 @@ jobs:
   build:
     # ubuntu仮想マシンで実行
     runs-on: ubuntu-latest
+
+    # 消さなくて良い？
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -31,7 +33,7 @@ jobs:
 
       # 追加コード1
       # バックエンドのURLを読み込み、npmコマンドを実行
-      - name: Npm install, build and test
+      - name: npm install, build and test
         env:
           NEXT_PUBLIC_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_API_ENDPOINT }}
         run: |
@@ -69,6 +71,10 @@ jobs:
         with:
           name: node-app
       
+      # 追加コード5 zipを展開
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
