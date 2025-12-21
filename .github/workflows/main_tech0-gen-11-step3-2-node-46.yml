@@ -56,13 +56,15 @@ jobs:
       # run: zip release.zip ./deploy -r
         run: |
           cd deploy
-          zip -r release.zip .
+          zip -r ../release.zip .
           cd ..
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: release.zip
+          if-no-files-found: error
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -74,12 +76,18 @@ jobs:
         with:
           name: node-app
           path: .
-      
+
+      # チェック用コード追加 2025.12.21
+      - name: Check files
+        run: |
+          ls -la
+          test -f release.zip && echo "OK: release.zip found" || (echo "NG: release.zip not found" && exit 1)
+
       # 追加コード5 zipを展開
       #- name: Unzip artifact for deployment
       #  run: unzip release.zip
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
