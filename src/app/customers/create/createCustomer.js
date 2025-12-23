@@ -30,7 +30,8 @@ const createCustomer = async (formData) => {
       statusText: res.statusText,
       body: text,
     });
-    throw new Error("Failed to create customer");
+    // throw new Error("Failed to create customer");
+    throw new Error(`Failed to create customer: ${res.status} ${res.statusText}`);
   }
 
   revalidatePath(`/customers`);
